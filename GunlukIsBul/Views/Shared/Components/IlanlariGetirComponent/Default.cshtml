@@ -1,0 +1,6 @@
+﻿@model IEnumerable<EntityLayer.Entities.Ilan>
+
+@foreach (var item in Model)
+{
+    <option value=@item.Id>@item.IlanBaslik</option>
+}

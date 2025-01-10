@@ -1,0 +1,574 @@
+﻿@{
+    ViewData["Title"] = "Admin Sayfası";
+}
+
+<style>
+    #button1 {
+        color: #ffffff;
+        background-color: #20c997;
+        box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .125);
+    }
+
+    #button2 {
+        color: #ffffff;
+        background-color: #ffc107;
+        box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .125);
+    }
+
+    #button3 {
+        color: #ffffff;
+        background-color: #dc3545;
+        box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .125);
+    }
+
+    #button4 {
+        color: #ffffff;
+        background-color: #CC2B52;
+        box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .125);
+    }
+
+    .form-group, button {
+        margin-top: 10px;
+    }
+
+</style>
+<div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button" id="button1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                İlan Ekle
+            </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+                <form id="ilanekle_form" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        <h6><label for="ilanbaslik">İlan Başlık</label></h6>
+                        <input type="text" name="Ilanbaslik" class="form-control" placeholder="İlan başlık">
+                    </div>
+                    <div class="form-group">
+                        <h6><label for="Açıklama">Açıklama</label></h6>
+                        <textarea name="Ilanaciklama" class="form-control" placeholder="Açıklama"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <h6><label for="Ücret">Ücret</label></h6>
+                        <input type="number" name="Ucret" class="form-control" placeholder="Ücret">
+                    </div>
+                    <div class="form-group">
+                        <h6>Vardiya saati</h6>
+                        <label for="Çalışma saati">Başlangıç saati</label>
+                        <input type="time" name="BaslangicSaati" class="form-control">
+                        <label for="Çalışma saati">Bitiş saati</label>
+                        <input type="time" name="BitisSaati" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <h6><label for="Çalışma saati">Çalışma saati</label></h6>
+                        <input type="number" name="CalismaSaati" class="form-control" placeholder="Çalışma saati">
+                    </div>
+                    <div class="form-group">
+                        <h6>Kategori</h6>
+                        <div>
+                        <label for="IlanKategori">Kategori seçin</label>
+                            <select class="form-control" name="IlanKategori">
+                                <option value="-1">Kategori Seçin</option>
+                                @await Component.InvokeAsync("KategorileriGetirComponent")
+                            </select>
+                        </div>
+                        <div>
+                            <label for="YeniKategori">ya da Yeni kategori girin:</label>
+                            <input type="text" name="YeniKategori" class="form-control" placeholder="Yeni kategori">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <h6><label for="Konum">Konum</label></h6>
+                        <input type="text" name="Konum" class="form-control" placeholder="Konum">
+                    </div>
+                    <div class="form-group d-flex">
+                        <h6>Cinsiyet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h6>
+                        <div class="form-check">
+                            <input type="radio" name="Cinsiyet" class="form-check-input" value="Bayan">
+                            <label class="form-check-label">Bayan</label>&nbsp;&nbsp;&nbsp;
+                        </div>
+
+                        <div class="form-check">
+                            <input type="radio" name="Cinsiyet" class="form-check-input" value="Bay">
+                            <label class="form-check-label">Bay</label>&nbsp;&nbsp;&nbsp;
+                        </div>
+
+                        <div class="form-check">
+                            <input type="radio" name="Cinsiyet" class="form-check-input" value="İkisi de">
+                            <label class="form-check-label">İkisi de</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <h6><label for="Tarih">Tarih</label></h6>
+                        <div class="d-flex">
+                            <div class="form-check">
+                                <input type="radio" name="IsDevamlilik" class="form-check-input" value="HerGun" checked>
+                                <label class="form-check-label">Her gün</label>&nbsp;&nbsp;&nbsp;
+                            </div>
+
+                            <div class="form-check">
+                                <input type="radio" name="IsDevamlilik" class="form-check-input" value="HaftaiciHerGun">
+                                <label class="form-check-label">Hafta içi her gün</label>&nbsp;&nbsp;&nbsp;
+                            </div>
+
+                            <div class="form-check">
+                                <input type="radio" name="IsDevamlilik" class="form-check-input" value="Tarih">
+                                <label class="form-check-label">Belirli bir tarih</label>
+                            </div>
+                        </div>
+                        <label for="Tarih">Belirli bir tarih girin</label>
+                        <input type="date" name="Tarih" class="form-control">
+                    </div>
+                    <div class="d-flex">
+                        <button type="submit" class="btn btn-success">İlan Ekle</button>
+                        <div id="pre-loader-ilanekle" style="width:25px; margin-left:8px; margin-top:10px;display:none">
+                            <img width="25px" src="~/loading/loading.gif" />
+                        </div>
+                    </div>
+                </form>
+                <div id="ilanekle_alert" class="mt-2">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button collapsed" id="button2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                İlan Güncelle
+            </button>
+        </h2>
+        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+                <div class="form-group">
+                    <h6><label for="ilan">İlan seçin</label></h6>
+                    <select class="form-control" name="ilan" id="select-ilan">
+                        <option value="-1">İlan Seçin</option>
+                        @await Component.InvokeAsync("IlanlariGetirComponent")
+                    </select>
+                    <div id="pre-loader-ilangetir" style="width:25px; margin-left:8px; margin-top:10px;display:none">
+                        <img width="25px" src="~/loading/loading.gif" />
+                    </div>
+                </div>
+                <br />
+                <hr />
+                <br />
+                <form id="ilanguncelle_form" method="post" style="display:none">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" />
+                    <input type="hidden" name="eklemetarihi"/>
+                    <div class="form-group">
+                        <h6><label for="ilanbaslik">İlan Başlık</label></h6>
+                        <input type="text" name="IlanBaslikGuncelle" class="form-control" placeholder="İlan başlık">
+                    </div>
+                    <div class="form-group">
+                        <h6><label for="Açıklama">Açıklama</label></h6>
+                        <textarea name="IlanAciklamaGuncelle" class="form-control" placeholder="Açıklama"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <h6><label for="Ücret">Ücret</label></h6>
+                        <input type="number" name="UcretGuncelle" class="form-control" placeholder="Ücret">
+                    </div>
+                    <div class="form-group">
+                        <h6>Vardiya saati</h6>
+                        <label for="Çalışma saati">Başlangıç saati</label>
+                        <input type="time" name="BaslangicSaatiGuncelle" class="form-control">
+                        <label for="Çalışma saati">Bitiş saati</label>
+                        <input type="time" name="BitisSaatiGuncelle" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <h6><label for="Çalışma saati">Çalışma saati</label></h6>
+                        <input type="number" name="CalismaSaatiGuncelle" class="form-control" placeholder="Çalışma saati">
+                    </div>
+                    <div class="form-group">
+                        <h6>Kategori</h6>
+                        <div>
+                            <label for="IlanKategori">Kategori seçin</label>
+                            <select class="form-control" name="IlanKategoriGuncelle">
+                                <option value="-1">Kategori Seçin</option>
+                                @await Component.InvokeAsync("KategorileriGetirComponent")
+                            </select>
+                        </div>
+                        <div>
+                            <label for="YeniKategori">ya da Yeni kategori girin:</label>
+                            <input type="text" name="YeniKategoriGuncelle" class="form-control" placeholder="Yeni kategori">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <h6><label for="Konum">Konum</label></h6>
+                        <input type="text" name="KonumGuncelle" class="form-control" placeholder="Konum">
+                    </div>
+                    <div class="form-group d-flex">
+                        <h6>Cinsiyet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h6>
+                        <div class="form-check">
+                            <input type="radio" name="CinsiyetGuncelle" class="form-check-input" value="Bayan">
+                            <label class="form-check-label">Bayan</label>&nbsp;&nbsp;&nbsp;
+                        </div>
+
+                        <div class="form-check">
+                            <input type="radio" name="CinsiyetGuncelle" class="form-check-input" value="Bay">
+                            <label class="form-check-label">Bay</label>&nbsp;&nbsp;&nbsp;
+                        </div>
+
+                        <div class="form-check">
+                            <input type="radio" name="CinsiyetGuncelle" class="form-check-input" value="İkisi de">
+                            <label class="form-check-label">İkisi de</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <h6><label for="Tarih">Tarih</label></h6>
+                        <div class="d-flex">
+                            <div class="form-check">
+                                <input type="radio" name="IsDevamlilikGuncelle" class="form-check-input" value="HerGun">
+                                <label class="form-check-label">Her gün</label>&nbsp;&nbsp;&nbsp;
+                            </div>
+
+                            <div class="form-check">
+                                <input type="radio" name="IsDevamlilikGuncelle" class="form-check-input" value="HaftaiciHerGun">
+                                <label class="form-check-label">Hafta içi her gün</label>&nbsp;&nbsp;&nbsp;
+                            </div>
+
+                            <div class="form-check">
+                                <input type="radio" name="IsDevamlilikGuncelle" class="form-check-input" value="Tarih">
+                                <label class="form-check-label">Tarih</label>
+                            </div>
+                        </div>
+                        <label for="TarihGuncelle">Belirli bir tarih girin</label>
+                        <input type="date" name="TarihGuncelle" class="form-control">
+                    </div>
+                    <div class="d-flex">
+                        <button type="submit" class="btn btn-warning">İlan Güncelle</button>
+                        <div id="pre-loader-ilanguncelle" style="width:25px; margin-left:8px; margin-top:10px;display:none">
+                            <img width="25px" src="~/loading/loading.gif" />
+                        </div>
+                    </div>
+                </form>
+                <div id="ilanguncelle_alert" class="mt-2">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingThree">
+            <button class="accordion-button collapsed" id="button3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                İlan Sil
+            </button>
+        </h2>
+        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+                <form id="ilansil_form" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        <h6><label for="ilan">İlan seçin</label></h6>
+                        <select class="form-control" name="ilan" id="select-ilan-delete">
+                            <option value="-1">İlan Seçin</option>
+                            @await Component.InvokeAsync("IlanlariGetirComponent")
+                        </select>
+                        <div id="pre-loader-ilangetir-sil" style="width:25px; margin-left:8px; margin-top:10px;display:none">
+                            <img width="25px" src="~/loading/loading.gif" />
+                        </div>
+                    </div>
+                    <div id="ilan-bilgi" class="mt-3">
+
+                    </div>
+                    <div class="d-flex">
+                        <button type="submit" class="btn btn-danger">İlan Sil</button>
+                        <div id="pre-loader-ilansil" style="width:25px; margin-left:8px; margin-top:10px;display:none">
+                            <img width="25px" src="~/loading/loading.gif" />
+                        </div>
+                    </div>
+                </form>
+                <div id="ilansil_alert" class="mt-2">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingFour">
+            <button class="accordion-button collapsed" id="button4" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                Kategori Sil
+            </button>
+        </h2>
+        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+                <form id="kategorisil_form" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        <h6><label for="ilan">Kategori Seçin</label></h6>
+                        <select class="form-control" name="kategori" id="select-kategori-delete">
+                            <option value="-1">Kategori Seçin</option>
+                            @await Component.InvokeAsync("KategorileriGetirComponent")
+                        </select>
+                    </div>
+                    
+                    <div class="d-flex">
+                        <button type="submit" class="btn btn-danger">Kategori Sil</button>
+                        <div id="pre-loader-kategorisil" style="width:25px; margin-left:8px; margin-top:10px;display:none">
+                            <img width="25px" src="~/loading/loading.gif" />
+                        </div>
+                    </div>
+                </form>
+                <div id="kategorisil_alert" class="mt-2">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="display:flex;justify-content:center">
+        <button class="btn btn-danger" id="cikisyap_button">Çıkış yap</button>
+    </div>
+    <div id="cikisyap_alert" class="mt-2">
+    </div>
+</div>
+
+<script>
+    $(document).ready(() => {
+        $("#ilanekle_form").on("submit", (e) => {
+            e.preventDefault();
+
+            $("#pre-loader-ilanekle").css("display", "flex");
+            $("#pre-loader-ilanekle").css("flex-direction", "column");
+            $("#pre-loader-ilanekle").css("justify-content", "center");
+
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            const formData = new FormData(document.querySelector("#ilanekle_form"))
+
+            fetch('/Admin/IlanEkle', {
+                method: 'POST',
+                headers: {
+                    'RequestVerificationToken': token
+                },
+                body: formData
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    else {
+                        return Promise.reject("İlan kaydedilirken bir hata oluştu. " + response.status);
+                    }
+                })
+                .then(data => {
+                    var success = data.success ? "success" : "danger";
+                    setAnimation("#ilanekle_alert", success, data.message, data.time);
+                })
+                .catch(err => {
+                    setAnimation("#ilanekle_alert", "danger", err, 2000);
+                })
+                .finally(() => {
+                    $("#pre-loader-ilanekle").css("display", "none");
+                });
+        });
+
+        $("#select-ilan").on("change", e => {
+            $("#pre-loader-ilangetir").css("display", "flex");
+            $("#pre-loader-ilangetir").css("flex-direction", "column");
+            $("#pre-loader-ilangetir").css("justify-content", "center");
+            fetch("/admin/ilangetir/" + e.target.value).then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    else {
+                        return Promise.reject("İlan kaydedilirken bir hata oluştu. - " + response.status);
+                    }
+                })
+                .then(data => {
+                    $("#ilanguncelle_form").css("display", "block");
+
+                    $("input[name='id']").val(e.target.value);
+                    $("input[name='eklemetarihi']").val(data.eklemeTarihi);
+                    $("input[name='IlanBaslikGuncelle']").val(data.ilanBaslik);
+                    $("textarea[name='IlanAciklamaGuncelle']").val(data.ilanAciklama);
+                    $("input[name='UcretGuncelle']").val(data.ucret);
+                    $("input[name='BaslangicSaatiGuncelle']").val(data.baslangicSaati);
+                    $("input[name='BitisSaatiGuncelle']").val(data.bitisSaati);
+                    $("input[name='CalismaSaatiGuncelle']").val(data.calismaSaati);
+                    $("select[name='IlanKategoriGuncelle']").val(data.ilanKategori);
+                    $("input[name='KonumGuncelle']").val(data.konum);
+                    $(`input[name='CinsiyetGuncelle'][value='${data.cinsiyet}']`).prop("checked", true);
+                    $(`input[name='IsDevamlilikGuncelle'][value='${data.isDevamlilik}']`).prop("checked", true);
+                    $("input[name='TarihGuncelle']").val(data.tarih.split("T")[0]);
+                })
+                .catch(err => {
+                    setAnimation("#ilanguncelle_alert", "danger", "Bir hata oluştu.", 2000);
+                })
+                .finally(() => {
+                    $("#pre-loader-ilangetir").css("display", "none");
+                });
+        });
+
+        $("#ilanguncelle_form").on("submit", e => {
+            e.preventDefault();
+
+            $("#pre-loader-ilanguncelle").css("display", "flex");
+            $("#pre-loader-ilanguncelle").css("flex-direction", "column");
+            $("#pre-loader-ilanguncelle").css("justify-content", "center");
+
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            const formData = new FormData(document.querySelector("#ilanguncelle_form"))
+
+            fetch('/Admin/IlanGuncelle', {
+                method: 'POST',
+                headers: {
+                    'RequestVerificationToken': token
+                },
+                body: formData
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    else {
+                        return Promise.reject("İlan güncellenirken bir hata oluştu. - " + response.status);
+                    }
+                })
+                .then(data => {
+                    var success = data.success ? "success" : "danger";
+                    setAnimation("#ilanguncelle_alert", success, data.message, data.time);
+                })
+                .catch(err => {
+                    setAnimation("#ilanguncelle_alert", "danger", err, 2000);
+                })
+                .finally(() => {
+                    $("#pre-loader-ilanguncelle").css("display", "none");
+                });
+        });
+
+        $("#select-ilan-delete").on("change", e => {
+            e.preventDefault();
+
+            $("#pre-loader-ilangetir-sil").css("display", "flex");
+            $("#pre-loader-ilangetir-sil").css("flex-direction", "column");
+            $("#pre-loader-ilangetir-sil").css("justify-content", "center");
+
+            fetch("/admin/IlanGetir/" + e.target.value)
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    else {
+                        return Promise.reject("İlan kaydedilirken bir hata oluştu. - " + response.status);
+                    }
+                })
+                .then(data => {
+                    $("#ilan-bilgi").html(`
+                            <p><strong>Başlık: </strong>${data.ilanBaslik}</p>
+                            <p><strong>Açıklama: </strong>${data.ilanAciklama}</p>
+                            <p><strong>Ücret: </strong>${data.ucret}</p>
+                            <p><strong>Konum: </strong>${data.konum}</p>
+                            <p><strong>Çalışma saati: </strong>${data.calismaSaati}</p>
+                            <p><strong>Kategori: </strong>${data.ilanKategori}</p>
+                            <p><strong>Cinsiyet: </strong>${data.cinsiyet}</p>
+                            <p><strong>Tarih: </strong>${data.tarih.split("T")[0]}</p>
+                            <p><strong>Eklenme tarihi: </strong>${data.eklemeTarihi.split("T")[0]} , ${data.eklemeTarihi.split("T")[1].split(".")[0]}</p>
+                    `);
+                })
+                .catch(err => {
+                    setAnimation("#ilanguncelle_alert", "danger", err, 2000);
+                })
+                .finally(() => {
+                    $("#pre-loader-ilangetir-sil").css("display", "none");
+                });
+
+        });
+        $("#ilansil_form").on("submit", e => {
+            e.preventDefault();
+
+            $("#pre-loader-ilansil").css("display", "flex");
+            $("#pre-loader-ilansil").css("flex-direction", "column");
+            $("#pre-loader-ilansil").css("justify-content", "center");
+
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+            delete_id = $("#select-ilan-delete").val();
+            fetch("/admin/ilanSil/" + delete_id, {
+                method: 'POST',
+                headers: {
+                    'RequestVerificationToken': token
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    else {
+                        return Promise.reject("İlan silinirken bir hata oluştu. - " + response.status);
+                    }
+                })
+                .then(data => {
+                    var success = data.success ? "success" : "danger";
+                    setAnimation("#ilansil_alert", success, data.message, data.time);
+                })
+                .catch(err => {
+                    setAnimation("#ilansil_alert", "danger", err, 2000);
+                })
+                .finally(() => {
+                    $("#pre-loader-ilansil").css("display", "none");
+                });
+        });
+
+        $("#kategorisil_form").on("submit", e => {
+            e.preventDefault();
+
+            $("#pre-loader-kategorisil").css("display", "flex");
+            $("#pre-loader-kategorisil").css("flex-direction", "column");
+            $("#pre-loader-kategorisil").css("justify-content", "center");
+
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+            delete_id = $("#select-kategori-delete option:selected").data("id");
+            fetch("/admin/kategoriSil/" + delete_id, {
+                method: 'POST',
+                headers: {
+                    'RequestVerificationToken': token
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    else {
+                        return Promise.reject("Kategori silinirken bir hata oluştu. - " + response.status);
+                    }
+                })
+                .then(data => {
+                    var success = data.success ? "success" : "danger";
+                    setAnimation("#kategorisil_alert", success, data.message, data.time);
+                })
+                .catch(err => {
+                    setAnimation("#kategorisil_alert", "danger", err, 2000);
+                })
+                .finally(() => {
+                    $("#pre-loader-kategorisil").css("display", "none");
+                });
+        });
+        $("#cikisyap_button").on("click", () => {
+            fetch("/admin/logout")
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = "/";
+                    }
+                    else {
+                        return Promise.reject("Bir hata oluştu. - " + response.status);
+                    }
+                })
+                .catch(err => {
+                    setAnimation("#cikisyap_alert", "danger", err, 2000);
+                });
+        })
+    });
+
+    function setAnimation(selector, state, message, time) {
+        $(selector).html(`
+                    <div class="alert-${state}">
+                        ${message}
+                    </div>
+                `);
+        $(selector).fadeIn(2000, () => {
+            setTimeout(() => {
+                $(selector).fadeOut();
+            }, time);
+        });
+    }
+</script>

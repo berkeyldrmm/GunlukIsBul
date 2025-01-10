@@ -1,0 +1,100 @@
+﻿@model IEnumerable<EntityLayer.Entities.Ilan>
+
+<div class="text-center" style="padding-top: 10px; display: flex; flex-direction: column; align-items: center">
+    <div class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+        Filtrele
+    </div>
+    <div id="pre-loader-ilanlar" style="width:25px; margin-left:8px; margin-top:10px;display:none">
+        <img width="25px" src="~/loading/loading.gif" />
+    </div>
+    <div id="ilanlar-list">
+        @foreach (var ilan in Model)
+        {
+            <div class="card" style="margin-top: 15px;">
+                <div class="card-body">
+                    <h5 class="card-title">@ilan.IlanBaslik</h5>
+                    <p class="card-text"><strong>Kategori: </strong> @ilan.IlanKategori</p>
+                    <p class="card-text"><strong>Ücret: </strong><i class="fa-solid fa-money-bill-wave"></i> @ilan.Ucret ₺</p>
+                    <p class="card-text"><strong>Konum: </strong><i class="fa-solid fa-location-dot"></i> @ilan.Konum</p>
+                    <p class="card-text"><strong>Cinsiyet: </strong><i class="fa-solid fa-mars-and-venus"></i> @ilan.Cinsiyet</p>
+                    @if (ilan.IsDevamlilik.ToLower() == "hergun")
+                    {
+                        <p class="card-text">
+                            <strong>Tarih: </strong><i class="fa-regular fa-calendar"></i> Her gün
+                        </p>
+                    }
+                    @if (ilan.IsDevamlilik.ToLower() == "haftaicihergun")
+                    {
+                        <p class="card-text">
+                            <strong>Tarih: </strong><i class="fa-regular fa-calendar"></i> Hafta içi her gün
+                        </p>
+                    }
+                    @if (ilan.IsDevamlilik.ToLower() == "tarih")
+                    {
+                        <p class="card-text">
+                            <strong>Tarih: </strong><i class="fa-regular fa-calendar"></i> @ilan.Tarih.ToString().Split(" ")[0]
+                        </p>
+                    }
+                    <a href="#" class="btn btn-primary">Detaylar</a>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <partial name="../PartialViews/FilterPartialView.cshtml"></partial>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#filter-form").on("submit", e => {
+        e.preventDefault();
+
+        $("#ilanlar-list").html("");
+        const formData = new FormData(document.querySelector("#filter-form"));
+
+        $("#pre-loader-ilanlar").css("display", "flex");
+        $("#pre-loader-ilanlar").css("flex-direction", "column");
+        $("#pre-loader-ilanlar").css("justify-content", "center");
+
+        const queryString = new URLSearchParams(formData).toString();
+        fetch("/home/filtreliGetir?"+queryString)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                else {
+                    return Promise.reject("Bir hata oluştu");
+                }
+            })
+            .then(data => {
+                var html = "";
+                console.log(data);
+                data.forEach(ilan => {
+                    html+=`
+                            <div class="card" style="margin-top: 15px;">
+                                <div class="card-body">
+                                    <h5 class="card-title">${ilan.ilanBaslik}</h5>
+                                        <p class="card-text"><strong>Kategori: </strong> ${ilan.ilanKategori}</p>
+                                        <p class="card-text"><strong>Ücret: </strong><i class="fa-solid fa-money-bill-wave"></i> ${ilan.ucret} ₺</p>
+                                        <p class="card-text"><strong>Konum: </strong><i class="fa-solid fa-location-dot"></i> ${ilan.konum}</p>
+                                        <p class="card-text"><strong>Cinsiyet: </strong><i class="fa-solid fa-mars-and-venus"></i> ${ilan.cinsiyet}</p>
+                                        <p class="card-text"><strong>Tarih: </strong><i class="fa-regular fa-calendar"></i> ${ilan.IsDevamlilik == 'HerGun' ? 'Her gün' : ilan.tarih.toString().split("T")[0]}</p>
+                                    <a href="#" class="btn btn-primary">Detaylar</a>
+                                </div>
+                            </div>
+                    `
+                });
+                $("#ilanlar-list").html(html);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+            .finally(() => {
+                $("#pre-loader-ilanlar").css("display", "none");
+            });
+    })
+</script>

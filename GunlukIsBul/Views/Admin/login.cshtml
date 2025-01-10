@@ -1,0 +1,36 @@
+﻿@model DTOLayer.DTOs.LoginDTO
+
+@{
+    ViewData["Title"] = "Admin Giriş";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Admin Giriş</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/AdminPanelStyle.css" />
+</head>
+<body>
+    <div class="background">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    <form asp-controller="admin" asp-action="login" method="post">
+        <h3>Giriş Yap</h3>
+        @if(ViewBag.error != null){
+            <div class="alert alert-danger" role="alert">
+                @ViewBag.error
+            </div>
+        }
+        <label for="username">Kullanıcı adı</label>
+        <input asp-for="Username" type="text" placeholder="Kullanıcı adı">
+
+        <label for="password">Şifre</label>
+        <input asp-for="Password" type="password" placeholder="Şifre">
+
+        <button>Giriş Yap</button>
+    </form>
+</body>
+</html>

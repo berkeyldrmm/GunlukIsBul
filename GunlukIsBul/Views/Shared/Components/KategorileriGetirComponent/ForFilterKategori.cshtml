@@ -1,0 +1,7 @@
+﻿@foreach (var item in ViewBag.kategoriler)
+{
+    <div class="form-group">
+        <input type="checkbox" name="KategoriFilter" class="form-check-input" value="@item.KategoriIsim">
+        <label>@item.KategoriIsim</label>
+    </div>
+}

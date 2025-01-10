@@ -1,0 +1,5 @@
+﻿@model IEnumerable<EntityLayer.Entities.IsKategori>
+
+@foreach(var item in Model){
+    <option value=@item.KategoriIsim data-id="@item.Id">@item.KategoriIsim</option>
+}
